@@ -126,7 +126,7 @@ OUTPUT FORMAT:
 1. Care Gaps Found (max 5 bullet points)
 2. Why It Matters (short, simple explanation)
 3. Suggested General Preventive Actions (safe, non-medical)
-4. Confidence Note (1 short sentence)
+
 
 RULES:
 - Do NOT diagnose diseases.
