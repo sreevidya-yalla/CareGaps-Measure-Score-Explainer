@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - HEDIS Score Explainer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f9ff;
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 25px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: white;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+            color: #4dabf7;
+        }
+        
+        .logo-text h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo-text p {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .back-to-home {
+            color: white;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s ease;
+        }
+        
+        .back-to-home:hover {
+            opacity: 0.8;
+        }
+        
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 0;
+        }
+        
+        .signup-container {
+            display: flex;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+        }
+        
+        .signup-image {
+            flex: 1;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+            color: white;
+            text-align: center;
+        }
+        
+        .signup-image-icon {
+            font-size: 5rem;
+            margin-bottom: 20px;
+            color: #a8c6ff;
+        }
+        
+        .signup-image h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            color: #a8c6ff;
+        }
+        
+        .signup-image p {
+            opacity: 0.9;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+        
+        .signup-form-container {
+            flex: 1.2;
+            padding: 50px;
+            overflow-y: auto;
+            max-height: 700px;
+        }
+        
+        .signup-form-header {
+            margin-bottom: 30px;
+        }
+        
+        .signup-form-header h2 {
+            color: #1e3c72;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .signup-form-header p {
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1e3c72;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .input-with-icon {
+            position: relative;
+        }
+        
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #2a5298;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 15px 15px 15px 45px;
+            border: 2px solid #e1ecff;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #2a5298;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.1);
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        /* Simple User Type Selection */
+        .user-type-selection {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8fbff;
+            border-radius: 8px;
+            border-left: 4px solid #2a5298;
+        }
+        
+        .user-type-label {
+            display: block;
+            margin-bottom: 10px;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+        
+        .user-type-options {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .user-type-option {
+            flex: 1;
+        }
+        
+        .user-type-option input {
+            display: none;
+        }
+        
+        .user-type-option label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background-color: white;
+            border: 2px solid #e1ecff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .user-type-option input:checked + label {
+            background-color: #e7f3ff;
+            border-color: #2a5298;
+            color: #1e3c72;
+            font-weight: 600;
+        }
+        
+        .user-type-option label:hover {
+            border-color: #a8c6ff;
+        }
+        
+        .user-type-option i {
+            font-size: 1.2rem;
+            color: #2a5298;
+        }
+        
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #4dabf7;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: center;
+            margin-top: 25px;
+        }
+        
+        .btn:hover {
+            background-color: #339af0;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-signup {
+            background-color: #4dabf7;
+        }
+        
+        .divider {
+            text-align: center;
+            margin: 25px 0;
+            position: relative;
+        }
+        
+        .divider:before {
+            content: "";
+            position: absolute;
+            top: 2%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #e1ecff;
+        }
+        
+        .divider span {
+            background-color: white;
+            padding: 0 15px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .login-link {
+            text-align: center;
+            margin-top: 25px;
+            color: #666;
+        }
+        
+        .login-link a {
+            color: #2a5298;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+        
+        .login-link a:hover {
+            color: #1e3c72;
+            text-decoration: underline;
+        }
+        
+        /* Password strength indicator */
+        .password-strength {
+            margin-top: 8px;
+            height: 5px;
+            background-color: #e1ecff;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .strength-meter {
+            height: 100%;
+            width: 0;
+            background-color: #4CAF50;
+            border-radius: 3px;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        
+        .password-hints {
+            margin-top: 5px;
+            font-size: 0.8rem;
+            color: #666;
+        }
+        
+        .password-hints ul {
+            list-style: none;
+            margin-top: 5px;
+        }
+        
+        .password-hints li {
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .password-hints i {
+            font-size: 0.7rem;
+        }
+        
+        .valid {
+            color: #4CAF50;
+        }
+        
+        .invalid {
+            color: #f44336;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #1e3c72;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .footer-content p {
+            opacity: 0.8;
+            margin: 5px 0;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .signup-container {
+                flex-direction: column;
+            }
+            
+            .signup-image {
+                padding: 30px;
+            }
+            
+            .signup-image-icon {
+                font-size: 3.5rem;
+            }
+            
+            .signup-form-container {
+                padding: 30px;
+                max-height: none;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .user-type-options {
+                flex-direction: column;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .signup-form-container {
+                padding: 25px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="logo-text">
+                        <h1>HEDIS Score Explainer</h1>
+                        <p>Simplifying Healthcare Quality Measures</p>
+                    </div>
+                </a>
+                <a href="/" class="back-to-home">
+                    <i class="fas fa-arrow-left"></i> Back to Home
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="signup-container">
+                <!-- Signup Image/Info Section -->
+                <div class="signup-image">
+                    <div class="signup-image-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <h3>Get Started with HEDIS Explainer</h3>
+                    <p>Create your account to access AI-powered HEDIS score explanations and care gap analysis.</p>
+                </div>
+                
+                <!-- Signup Form Section -->
+                <div class="signup-form-container">
+                    <div class="signup-form-header">
+                        <h2>Create Your Account</h2>
+                        <p>Fill in your details to start using the HEDIS Explainer Bot</p>
+                    </div>
+                    
+                    <form id="signupForm">
+                        <!-- Simple User Type Selection -->
+                        <div class="user-type-selection">
+                            <label class="user-type-label">Account Type:</label>
+                            <div class="user-type-options">
+                                <div class="user-type-option">
+                                    <input type="radio" id="userAccount" name="userType" value="user" checked>
+                                    <label for="userAccount">
+                                        <i class="fas fa-user"></i> User Account
+                                    </label>
+                                </div>
+                                
+                                <div class="user-type-option">
+                                    <input type="radio" id="adminAccount" name="userType" value="admin">
+                                    <label for="adminAccount">
+                                        <i class="fas fa-user-shield"></i> Admin Account
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Personal Information Form Fields -->
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-user"></i>
+                                <input type="text" id="fullName" class="form-control" placeholder="Enter your full name" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <input type="email" id="email" class="form-control" placeholder="Enter your email address" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-meter" id="strengthMeter"></div>
+                                </div>
+                                <div class="password-hints">
+                                    <p>Password must contain:</p>
+                                    <ul>
+                                        <li id="lengthHint"><i class="fas fa-circle"></i> At least 8 characters</li>
+                                        <li id="uppercaseHint"><i class="fas fa-circle"></i> One uppercase letter</li>
+                                        <li id="lowercaseHint"><i class="fas fa-circle"></i> One lowercase letter</li>
+                                        <li id="numberHint"><i class="fas fa-circle"></i> One number</li>
+                                        <li id="specialHint"><i class="fas fa-circle"></i> One special character</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm Password</label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-lock"></i>
+                                    <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm your password" required>
+                                </div>
+                                <div id="passwordMatchMessage" class="password-hints"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="organization">Organization (Optional)</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-hospital"></i>
+                                <input type="text" id="organization" class="form-control" placeholder="Hospital, Clinic, or Organization">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-signup">Create New Account</button>
+                        
+                        <div class="divider">
+                            <span>Already have an account?</span>
+                        </div>
+                        
+                        <div class="login-link">
+                            <p>Already registered? <a href="/login">Login to your account</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>CareGaps Measure Score Explainer Bot</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const signupForm = document.getElementById('signupForm');
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            const strengthMeter = document.getElementById('strengthMeter');
+            const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+            
+            // Password strength indicators
+            const lengthHint = document.getElementById('lengthHint');
+            const uppercaseHint = document.getElementById('uppercaseHint');
+            const lowercaseHint = document.getElementById('lowercaseHint');
+            const numberHint = document.getElementById('numberHint');
+            const specialHint = document.getElementById('specialHint');
+            
+            // Check password strength
+            function checkPasswordStrength(password) {
+                let strength = 0;
+                
+                // Check password criteria
+                const hasMinLength = password.length >= 8;
+                const hasUpperCase = /[A-Z]/.test(password);
+                const hasLowerCase = /[a-z]/.test(password);
+                const hasNumbers = /\d/.test(password);
+                const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+                
+                // Update hint indicators
+                updateHintIndicator(lengthHint, hasMinLength);
+                updateHintIndicator(uppercaseHint, hasUpperCase);
+                updateHintIndicator(lowercaseHint, hasLowerCase);
+                updateHintIndicator(numberHint, hasNumbers);
+                updateHintIndicator(specialHint, hasSpecialChar);
+                
+                // Calculate strength (0-5)
+                strength += hasMinLength ? 1 : 0;
+                strength += hasUpperCase ? 1 : 0;
+                strength += hasLowerCase ? 1 : 0;
+                strength += hasNumbers ? 1 : 0;
+                strength += hasSpecialChar ? 1 : 0;
+                
+                // Update strength meter
+                const strengthPercent = (strength / 5) * 100;
+                strengthMeter.style.width = `${strengthPercent}%`;
+                
+                // Update color based on strength
+                if (strength <= 2) {
+                    strengthMeter.style.backgroundColor = '#f44336'; // Red
+                } else if (strength <= 4) {
+                    strengthMeter.style.backgroundColor = '#FF9800'; // Orange
+                } else {
+                    strengthMeter.style.backgroundColor = '#4CAF50'; // Green
+                }
+                
+                return strength;
+            }
+            
+            function updateHintIndicator(element, isValid) {
+                const icon = element.querySelector('i');
+                if (isValid) {
+                    icon.className = 'fas fa-check-circle valid';
+                    element.classList.add('valid');
+                    element.classList.remove('invalid');
+                } else {
+                    icon.className = 'fas fa-times-circle invalid';
+                    element.classList.add('invalid');
+                    element.classList.remove('valid');
+                }
+            }
+            
+            // Check if passwords match
+            function checkPasswordMatch() {
+                const password = passwordInput.value;
+                const confirmPassword = confirmPasswordInput.value;
+                
+                if (password === '' || confirmPassword === '') {
+                    passwordMatchMessage.textContent = '';
+                    passwordMatchMessage.className = 'password-hints';
+                    return false;
+                }
+                
+                if (password === confirmPassword) {
+                    passwordMatchMessage.textContent = 'Passwords match ✓';
+                    passwordMatchMessage.style.color = '#4CAF50';
+                    return true;
+                } else {
+                    passwordMatchMessage.textContent = 'Passwords do not match ✗';
+                    passwordMatchMessage.style.color = '#f44336';
+                    return false;
+                }
+            }
+            
+            // Event listeners
+            passwordInput.addEventListener('input', function() {
+                checkPasswordStrength(this.value);
+                checkPasswordMatch();
+            });
+            
+            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+            
+            // Handle form submission
+            signupForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Get form values
+                const fullName = document.getElementById('fullName').value;
+                const email = document.getElementById('email').value;
+                const password = passwordInput.value;
+                const userType = document.querySelector('input[name="userType"]:checked').value;
+                const organization = document.getElementById('organization').value;
+                
+                // Validate form
+                if (!fullName || !email || !password) {
+                    alert('Please fill in all required fields');
+                    return;
+                }
+                
+                // Check password strength
+                const strength = checkPasswordStrength(password);
+                if (strength < 3) {
+                    alert('Please create a stronger password with at least 8 characters including uppercase, lowercase, numbers, and special characters.');
+                    return;
+                }
+                
+                // Check password match
+                if (!checkPasswordMatch()) {
+                    alert('Passwords do not match. Please confirm your password.');
+                    return;
+                }
+                
+                // In a real application, you would send this to a server
+                console.log('Signup attempt with:', { 
+                    fullName, 
+                    email, 
+                    userType, 
+                    organization 
+                });
+                
+                // Show success message
+                const accountType = userType === 'admin' ? 'Admin' : 'User';
+                alert(`${accountType} account created successfully! Welcome ${fullName}. You will be redirected to login.`);
+                
+                // Update UI
+                document.querySelector('.signup-form-header h2').textContent = 'Account Created!';
+                document.querySelector('.signup-form-header p').textContent = `Your ${accountType.toLowerCase()} account has been created successfully. Redirecting to login...`;
+                document.querySelector('.btn-signup').textContent = 'Account Created ✓';
+                document.querySelector('.btn-signup').style.backgroundColor = '#4CAF50';
+                document.querySelector('.btn-signup').disabled = true;
+                
+                // Simulate redirect after 3 seconds
+                setTimeout(() => {
+                    window.location.href = "/login";
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HEDIS Score Explainer Bot</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f5f9ff;
+    color: #333;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background: linear-gradient(135deg, #0b224d 0%, #2a5298 100%);
+    color: white;
+    padding: 30px 0;
+    text-align: center;
+}
+
+.project-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+}
+
+.project-tagline {
+    font-size: 1.1rem;
+    opacity: 0.9;
+}
+
+/* Main */
+main {
+    flex: 1;
+    padding: 60px 0;
+}
+
+.hero-section {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 50px;
+}
+
+.hero-section p {
+    font-size: 1.1rem;
+    color: #555;
+}
+
+/* Auth Section */
+.auth-section {
+    background-color: rgb(255, 255, 255);
+    border-radius: 25px;
+    padding: 50px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.auth-section h3 {
+    text-align: center;
+    color: #1e3c72;
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+}
+
+/* Auth Options */
+.auth-options {
+    display: flex;
+    flex-direction: row;
+    gap: 60px;
+}
+
+.auth-card {
+    background-color: #f8fbff;
+    border-radius: 10px;
+    padding: 20px 32px;
+    border-left: 6px solid #2a5298;
+    transition: 0.3s;
+    flex: 1;
+}
+
+.auth-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.auth-card h4 {
+    color: #1e3c72;
+    margin-bottom: 5px;
+}
+
+.auth-card p {
+    color: #666;
+    margin-bottom: 10px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #2a5298;
+    color: white;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.btn:hover {
+    background-color: #1e3c72;
+}
+
+/* NEW – Right Align Buttons */
+.btn-row {
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+}
+
+
+/* Footer */
+footer {
+    background-color: #1e3c72;
+    color: white;
+    padding: 25px 0;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .project-title {
+        font-size: 1.8rem;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<div class="container">
+<h1 class="project-title">CareGaps Measure Score Explainer Bot</h1>
+<p class="project-tagline">Simplifying Healthcare Quality Measures with AI</p>
+</div>
+</header>
+
+<main>
+<div class="container">
+
+<section class="hero-section">
+<p>This AI-powered chatbot explains a patient's HEDIS score in simple terms and provides actionable advice to help close care gaps.</p>
+</section>
+
+<section class="auth-section">
+<h3>Get Started with HEDIS Explainer</h3>
+
+<div class="auth-options">
+
+<!-- Login Card -->
+<div class="auth-card">
+<h4><i class="fas fa-sign-in-alt"></i> Login</h4>
+<p>Already have an account? Sign in to access the HEDIS Explainer Bot.</p>
+<div class="btn-row">
+<a href="/login" class="btn">Login</a>
+</div>
+</div>
+
+<!-- Signup Card -->
+<div class="auth-card">
+<h4><i class="fas fa-user-plus"></i> Sign Up</h4>
+<p>New user? Create an account to start analyzing care gaps.</p>
+<div class="btn-row">
+<a href="signup" class="btn">Sign Up</a>
+</div>
+</div>
+
+</div>
+</section>
+
+</div>
+</main>
+
+<footer>
+<p>CareGaps Measure Score Explainer Bot</p>
+</footer>
+
+</body>
+</html>

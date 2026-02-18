@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - HEDIS Explainer</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  background:#f5f9ff;
+}
+
+/* HEADER */
+header{
+  background:linear-gradient(135deg,#1e3c72,#2a5298);
+  color:white;
+  padding:25px;
+  text-align:center;
+}
+
+.container{
+  max-width:1100px;
+  margin:40px auto;
+  padding:20px;
+}
+
+/* GRID CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:20px;
+}
+
+.card{
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  margin-bottom:25px;
+}
+
+h3{
+  color:#1e3c72;
+  margin-bottom:15px;
+}
+
+.stat{
+  font-size:2rem;
+  font-weight:bold;
+  color:#2a5298;
+}
+
+/* TABLE */
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th,td{
+  padding:10px;
+  border-bottom:1px solid #e1ecff;
+  text-align:left;
+}
+th{
+  color:#1e3c72;
+}
+
+/* FOOTER */
+footer{
+  background:#1e3c72;
+  color:white;
+  text-align:center;
+  padding:20px;
+  margin-top:40px;
+}
+
+ul{
+  padding-left:20px;
+}
+
+@media(max-width:768px){
+  header h1{font-size:1.5rem;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<h1><i class="fas fa-user-shield"></i> Admin Dashboard</h1>
+<p>CareGaps Measure Score Explainer — System Control Panel</p>
+</header>
+
+<div class="container">
+
+<!-- SYSTEM STATS -->
+<div class="grid">
+  <div class="card">
+    <h3>Total Users</h3>
+    <p class="stat" id="users">--</p>
+  </div>
+
+  <div class="card">
+    <h3>Reports Analyzed</h3>
+    <p class="stat" id="reports">--</p>
+  </div>
+
+  <div class="card">
+    <h3>Active Sessions</h3>
+    <p class="stat">17</p>
+  </div>
+
+  <div class="card">
+    <h3>AI Status</h3>
+    <p class="stat" style="color:green;">Online</p>
+  </div>
+</div>
+
+<!-- CARE GAP ANALYTICS -->
+<div class="card">
+<h3><i class="fas fa-chart-line"></i> Common Care Gaps</h3>
+<ul>
+<li>Diabetes Eye Exam – 42%</li>
+<li>Blood Pressure Screening – 31%</li>
+<li>Cholesterol Check – 19%</li>
+<li>Dental Visit – 14%</li>
+</ul>
+</div>
+
+<!-- AI MONITORING -->
+<div class="card">
+<h3><i class="fas fa-robot"></i> AI Monitoring</h3>
+<ul>
+<li>Model: Gemini 2.5 Flash</li>
+<li>Average Response Time: 1.8 sec</li>
+<li>Confidence Score: 92%</li>
+<li style="color:#b00020;">⚠ 2 Low Confidence Responses Today</li>
+</ul>
+</div>
+
+<!-- USER MANAGEMENT -->
+<div class="card">
+<h3><i class="fas fa-users"></i> Recent Users</h3>
+<table>
+<tr>
+<th>Name</th>
+<th>Role</th>
+<th>Last Login</th>
+</tr>
+<tr>
+<td>John Doe</td>
+<td>User</td>
+<td>2 hrs ago</td>
+</tr>
+<tr>
+<td>Priya N</td>
+<td>Admin</td>
+<td>1 day ago</td>
+</tr>
+<tr>
+<td>Rahul K</td>
+<td>User</td>
+<td>3 days ago</td>
+</tr>
+</table>
+</div>
+
+<!-- ACTIVITY LOG -->
+<div class="card">
+<h3><i class="fas fa-history"></i> System Activity</h3>
+<ul>
+<li>User A uploaded report</li>
+<li>AI analyzed Diabetes measure</li>
+<li>Admin login successful</li>
+<li>New user registered</li>
+</ul>
+</div>
+
+</div>
+
+<footer>
+<p>CareGaps Measure Score Explainer Bot</p>
+</footer>
+
+<script>
+// Demo Data
+document.getElementById("users").innerText="128";
+document.getElementById("reports").innerText="542";
+</script>
+
+</body>
+</html>

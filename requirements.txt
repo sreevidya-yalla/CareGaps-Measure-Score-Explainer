@@ -1,0 +1,17 @@
+streamlit
+pdfplumber
+pytesseract
+pillow
+pdf2image
+google-generativeai
+python-dateutil
+faiss-cpu
+numpy
+sentence-transformers
+scikit-learn
+torch
+transformers
+google
+scipy
+fastapi
+uvicorn
