@@ -577,6 +577,7 @@
             const confirmPasswordInput = document.getElementById('confirmPassword');
             const strengthMeter = document.getElementById('strengthMeter');
             const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+            const signupButton = document.querySelector('.btn-signup');
             
             // Password strength indicators
             const lengthHint = document.getElementById('lengthHint');
@@ -603,7 +604,7 @@
                 updateHintIndicator(numberHint, hasNumbers);
                 updateHintIndicator(specialHint, hasSpecialChar);
                 
-                // Calculate strength (0-5)
+                // Calculate strength 
                 strength += hasMinLength ? 1 : 0;
                 strength += hasUpperCase ? 1 : 0;
                 strength += hasLowerCase ? 1 : 0;
@@ -612,15 +613,15 @@
                 
                 // Update strength meter
                 const strengthPercent = (strength / 5) * 100;
-                strengthMeter.style.width = `${strengthPercent}%`;
+                strengthMeter.style.width = strengthPercent + "%";
                 
                 // Update color based on strength
                 if (strength <= 2) {
-                    strengthMeter.style.backgroundColor = '#f44336'; // Red
+                    strengthMeter.style.backgroundColor = '#f44336'; 
                 } else if (strength <= 4) {
-                    strengthMeter.style.backgroundColor = '#FF9800'; // Orange
+                    strengthMeter.style.backgroundColor = '#FF9800'; 
                 } else {
-                    strengthMeter.style.backgroundColor = '#4CAF50'; // Green
+                    strengthMeter.style.backgroundColor = '#4CAF50'; 
                 }
                 
                 return strength;
@@ -644,9 +645,9 @@
                 const password = passwordInput.value;
                 const confirmPassword = confirmPasswordInput.value;
                 
-                if (password === '' || confirmPassword === '') {
+                
+                if (!password || !confirmPassword) {
                     passwordMatchMessage.textContent = '';
-                    passwordMatchMessage.className = 'password-hints';
                     return false;
                 }
                 
@@ -670,7 +671,7 @@
             confirmPasswordInput.addEventListener('input', checkPasswordMatch);
             
             // Handle form submission
-            signupForm.addEventListener('submit', function(e) {
+            signupForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
                 // Get form values
@@ -699,31 +700,43 @@
                     return;
                 }
                 
-                // In a real application, you would send this to a server
-                console.log('Signup attempt with:', { 
-                    fullName, 
-                    email, 
-                    userType, 
-                    organization 
-                });
-                
-                // Show success message
-                const accountType = userType === 'admin' ? 'Admin' : 'User';
-                alert(`${accountType} account created successfully! Welcome ${fullName}. You will be redirected to login.`);
-                
-                // Update UI
-                document.querySelector('.signup-form-header h2').textContent = 'Account Created!';
-                document.querySelector('.signup-form-header p').textContent = `Your ${accountType.toLowerCase()} account has been created successfully. Redirecting to login...`;
-                document.querySelector('.btn-signup').textContent = 'Account Created ✓';
-                document.querySelector('.btn-signup').style.backgroundColor = '#4CAF50';
-                document.querySelector('.btn-signup').disabled = true;
-                
-                // Simulate redirect after 3 seconds
-                setTimeout(() => {
+                try {
+                    signupButton.disabled = true;
+                    signupButton.textContent = "Creating Account...";
+        
+                    const formData = new FormData();
+                    formData.append("username", fullName);
+                    formData.append("email", email);
+                    formData.append("password", password);
+                    formData.append("role", userType);
+        
+                    const res = await fetch("/api/signup", {
+                        method: "POST",
+                        body: formData
+                    });
+
+                    const data = await res.json();
+        
+                    if (!res.ok) {
+                        signupButton.disabled = false;
+                        signupButton.textContent = "Create New Account";
+                        alert(data.detail || "Signup failed");
+                        return;
+                    }
+
+                    alert("Account created successfully! Please login.");
                     window.location.href = "/login";
-                }, 3000);
-            });
-        });
-    </script>
+        
+                } catch (error) {
+                    signupButton.disabled = false;
+                    signupButton.textContent = "Create New Account";
+                    alert("Server error. Please try again.");
+                }
+    });
+
+});
+</script>
+
+
 </body>
 </html>
