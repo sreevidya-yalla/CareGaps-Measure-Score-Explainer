@@ -190,7 +190,8 @@ footer {
           <p>Upload Report & View Care Gap Analysis</p>
         </div>
       </div>
-      <a href="/login" style="color:white;">← Back</a>
+      <button onclick="logout()" style="background:none;border:none;color:white;cursor:pointer;font-size:14px;">
+        Logout</button>
     </div>
   </div>
 </header>
@@ -204,7 +205,12 @@ footer {
       <br><br>
       <button class="btn" onclick="analyzeFile()">Analyze Report</button>
     </div>
-
+    
+    <div class="card">
+      <h2>Uploaded Report</h2>
+      <iframe id="pdfViewer" width="100%" height="250px" style="border-radius:8px;"></iframe>
+    </div>
+    
     <div class="card">
       <h2>Care Gap Result</h2>
       <textarea id="result" placeholder="AI analysis will appear here..."readonly></textarea>
@@ -216,8 +222,8 @@ footer {
 <footer>
   ⚠ Educational Tool Only — Not Medical Advice
 </footer>
-
 <script>
+
 async function analyzeFile(){
   const file = document.getElementById("fileInput").files[0];
   if(!file){
@@ -225,10 +231,19 @@ async function analyzeFile(){
     return;
   }
 
+  const token = localStorage.getItem("token");
+
+  if(!token){
+    alert("Session expired. Please login again.");
+    window.location.href = "/login";
+    return;
+  }
+
   const overlay = document.getElementById("loadingOverlay");
   const resultBox = document.getElementById("result");
+  const pdfViewer = document.getElementById("pdfViewer");
 
-  overlay.style.display = "flex"; // SHOW POPUP
+  overlay.style.display = "flex";
   resultBox.value = "";
 
   const formData = new FormData();
@@ -237,20 +252,46 @@ async function analyzeFile(){
   try {
     const res = await fetch("/analyze", {
       method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token
+      },
       body: formData
     });
 
+    if(res.status === 401){
+      alert("Session expired. Please login again.");
+      localStorage.removeItem("token");
+      window.location.href = "/login";
+      return;
+    }
+
     const data = await res.json();
+
     resultBox.value = data.result || "No result returned.";
-  } 
-  catch(err) {
+
+    if (data.file_url) {
+      pdfViewer.src = data.file_url;
+    }
+
+    resultBox.scrollIntoView({ behavior: "smooth" });
+
+  } catch (err) {
+    console.error(err);
     resultBox.value = "Server error. Please try again.";
-  } 
-  finally {
-    overlay.style.display = "none"; // HIDE POPUP
+  } finally {
+    overlay.style.display = "none";
   }
 }
+
+function logout() {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+}
+
 </script>
+
+
+
 
 </body>
 </html>
