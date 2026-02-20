@@ -216,12 +216,43 @@ Don't have an account? <a href="/signup">Sign Up</a>
 <p>CareGaps Measure Score Explainer Bot</p>
 </footer>
 
+
 <script>
-document.getElementById('loginForm').addEventListener('submit', function(e){
+
+document.getElementById('loginForm').addEventListener('submit', async function(e){
     e.preventDefault();
-    alert("Login successful!");
-    window.location.href = "/user_dashboard";
+
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+
+    try {
+        const formData = new FormData();
+        formData.append("email", email);
+        formData.append("password", password);
+
+        const res = await fetch("/api/login", {
+            method: "POST",
+            body: formData
+        });
+
+        const data = await res.json();
+
+        if(!res.ok){
+            alert(data.detail || "Login failed");
+            return;
+        }
+
+        //JWT
+        localStorage.setItem("token", data.access_token);
+
+        // Redirect to dashboard
+        window.location.href = "/user_dashboard";
+
+    } catch (error) {
+        alert("Server error. Please try again.");
+    }
 });
+
 </script>
 
 </body>
