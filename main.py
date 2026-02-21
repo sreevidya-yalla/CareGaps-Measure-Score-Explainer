@@ -115,6 +115,28 @@ if os.path.exists("static"):
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 
+def send_reset_email(to_email, reset_link):
+
+    msg = EmailMessage()
+    msg["Subject"] = "Password Reset - HEDIS Explainer"
+    msg["From"] = os.getenv("EMAIL_FROM")
+    msg["To"] = to_email
+
+    msg.set_content(f"""
+Click the link below to reset your password:
+
+{reset_link}
+
+This link expires in 15 minutes.
+""")
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
+        smtp.login(os.getenv("EMAIL_USERNAME"), os.getenv("EMAIL_PASSWORD"))
+        smtp.send_message(msg)
+
+
+
+
 # AUTH ROUTES
 # ==============================
 
@@ -172,6 +194,63 @@ async def logout():
 
 
 
+@app.post("/api/forgot-password")
+async def forgot_password(email: str = Form(...)):
+
+    user = users_collection.find_one({"email": email})
+
+    if not user:
+        return {"message": "If this email exists, a reset link has been sent."}
+
+    reset_token = secrets.token_urlsafe(32)
+
+    users_collection.update_one(
+        {"email": email},
+        {
+            "$set": {
+                "reset_token": reset_token,
+                "reset_token_expiry": datetime.utcnow() + timedelta(minutes=15)
+            }
+        }
+    )
+
+    reset_link = f"http://localhost:8000/reset-password/{reset_token}"
+
+    send_reset_email(email, reset_link)
+
+    return {"message": "If this email exists, a reset link has been sent."}
+
+@app.post("/api/reset-password/{token}")
+async def reset_password(
+    token: str,
+    new_password: str = Form(...)
+):
+
+    user = users_collection.find_one({
+        "reset_token": token,
+        "reset_token_expiry": {"$gt": datetime.utcnow()}
+    })
+
+    if not user:
+        raise HTTPException(status_code=400, detail="Invalid or expired token")
+
+    hashed_password = pwd_context.hash(new_password)
+
+    users_collection.update_one(
+        {"_id": user["_id"]},
+        {
+            "$set": {"password": hashed_password},
+            "$unset": {"reset_token": "", "reset_token_expiry": ""}
+        }
+    )
+
+    return {"message": "Password reset successful"}
+
+
+
+
+
+
 
 # HTML ROUTES
 # ==============================
@@ -204,6 +283,14 @@ async def admin_dashboard(request: Request):
 @app.get("/forgot_password", response_class=HTMLResponse)
 async def forgot_password(request: Request):
     return templates.TemplateResponse("forgot_password.html", {"request": request})
+
+
+@app.get("/reset-password/{token}", response_class=HTMLResponse)
+async def reset_password_page(request: Request, token: str):
+    return templates.TemplateResponse(
+        "reset_password.html",
+        {"request": request}
+    )
 
 
 
