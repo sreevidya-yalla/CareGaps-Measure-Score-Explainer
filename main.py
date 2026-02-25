@@ -23,9 +23,8 @@ load_dotenv()
 
 app = FastAPI()
 
-# ==============================
 # DATABASE
-# ==============================
+#-------------------------------
 MONGO_URI = os.getenv("MONGO_URI")
 if not MONGO_URI:
     raise ValueError("MONGO_URI not found in .env file")
@@ -37,14 +36,13 @@ users_collection = db["users"]
 users_collection.create_index("email", unique=True)
 
 
-# ==============================
 # PASSWORD HASHING
-# ==============================
+# --------------------------------
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-# ==============================
-# JWT CONFIG
-# ==============================
+
+# JWT CONFIG#
+#-----------------------------
 SECRET_KEY = os.getenv("SECRET_KEY")
 if not SECRET_KEY:
     raise ValueError("SECRET_KEY not set in .env")
@@ -81,9 +79,9 @@ def get_current_admin(current_user: dict = Depends(get_current_user)):
     return current_user
 
 
-# ==============================
+
 # IMPORT AI FUNCTIONS
-# ==============================
+#-------------------------------
 from app import (
     extract_text_from_scanned_pdf,
     structure_medical_data,
@@ -92,15 +90,15 @@ from app import (
     analyze_care_gaps
 )
 
-# ==============================
+
 # FILE UPLOAD CONFIG
-# ==============================
+# -------------------------------
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-# ==============================
+
 # CORS
-# ==============================
+# -------------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -109,9 +107,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# ==============================
 # TEMPLATES & STATIC
-# ==============================
+# ------------------------------------
 templates = Jinja2Templates(directory="templates")
 
 if os.path.exists("static"):
@@ -144,9 +141,8 @@ This link expires in 15 minutes.
 
 
 
-# ==============================
 # AUTH ROUTES
-# ==============================
+# ---------------------------
 
 @app.post("/api/signup")
 async def register_user(
@@ -256,9 +252,8 @@ async def reset_password(
 
 
 
-# ==============================
 # HTML ROUTES
-# ==============================
+# -------------------------------
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
@@ -298,9 +293,9 @@ async def reset_password_page(request: Request, token: str):
 
 
 
-# ==============================
+
 # PROTECTED ANALYZE ROUTE
-# ==============================
+# -------------------------
 @app.post("/analyze")
 async def analyze(
     file: UploadFile = File(...),
