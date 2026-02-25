@@ -16,22 +16,45 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
+
 # ---------------- CONFIG ----------------
 pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-#client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-
-api_key = os.getenv("GEMINI_API_KEY")
-
-if not api_key:
-    raise ValueError("GEMINI_API_KEY not found. Check your .env file.")
-
-client = genai.Client(api_key=api_key)
 
 
+# ---------------- GEMINI MULTI-KEY SETUP ----------------
+
+api_keys = [
+    os.getenv("GEMINI_API_KEY_1"),
+    os.getenv("GEMINI_API_KEY_2")
+]
+
+clients = [genai.Client(api_key=k) for k in api_keys if k]
+
+if not clients:
+    raise ValueError("No Gemini API keys found in .env")
+
+
+# ---------------- GEMINI CALL ----------------
+
+def gemini_call(prompt):
+    last_error = None
+    for i, client in enumerate(clients):
+        try:
+            print(f"Using Gemini API Key #{i+1}")
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=prompt
+            )
+            return response
+        except Exception as e:
+            print(f"API Key #{i+1} failed:")
+            print(str(e))
+            last_error = e
+    raise Exception("All Gemini API keys exhausted:\n" + str(last_error))
+    
+#VECTOR DATABASE
 embed_model = SentenceTransformer('all-MiniLM-L6-v2')
-
 index = faiss.read_index("hedis_index.faiss")
-
 with open("hedis_chunks.pkl", "rb") as f:
     hedis_chunks = pickle.load(f)
 
@@ -83,10 +106,7 @@ def structure_medical_data(raw_text):
     {raw_text}
     """
 
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
+    response = gemini_call(prompt)
 
     raw_output = response.text.strip()
 
@@ -120,7 +140,7 @@ def analyze_care_gaps(patient_data, hedis_rules):
 You are a healthcare quality assistant.
 
 GOAL:
-Identify preventive care gaps using ONLY the provided HEDIS guidelines and the patient data.
+Identify preventive care gaps using the provided HEDIS guidelines and the patient data.
 
 OUTPUT FORMAT:
 1. Care Gaps Found (max 5 bullet points)
@@ -154,12 +174,7 @@ HEDIS GUIDELINES:
 {hedis_rules}
 """
 
-
-
-    response = client.models.generate_content(
-        model="gemini-2.5-flash",
-        contents=prompt
-    )
+    response = gemini_call(prompt)
     return response.text
 
 
