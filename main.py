@@ -1,5 +1,5 @@
 from fastapi import FastAPI, UploadFile, File, Request, Form, Depends, HTTPException, status
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -7,6 +7,10 @@ from fastapi.security import OAuth2PasswordBearer
 
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+import secrets
+
+import smtplib
+from email.message import EmailMessage
 
 import os
 import uuid
@@ -19,6 +23,7 @@ load_dotenv()
 
 app = FastAPI()
 
+# ==============================
 # DATABASE
 # ==============================
 MONGO_URI = os.getenv("MONGO_URI")
@@ -32,11 +37,12 @@ users_collection = db["users"]
 users_collection.create_index("email", unique=True)
 
 
+# ==============================
 # PASSWORD HASHING
 # ==============================
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
-
+# ==============================
 # JWT CONFIG
 # ==============================
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -75,6 +81,7 @@ def get_current_admin(current_user: dict = Depends(get_current_user)):
     return current_user
 
 
+# ==============================
 # IMPORT AI FUNCTIONS
 # ==============================
 from app import (
@@ -85,14 +92,13 @@ from app import (
     analyze_care_gaps
 )
 
-
+# ==============================
 # FILE UPLOAD CONFIG
 # ==============================
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
-
-
+# ==============================
 # CORS
 # ==============================
 app.add_middleware(
@@ -103,8 +109,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-
+# ==============================
 # TEMPLATES & STATIC
 # ==============================
 templates = Jinja2Templates(directory="templates")
@@ -113,6 +118,7 @@ if os.path.exists("static"):
     app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+
 
 
 def send_reset_email(to_email, reset_link):
@@ -137,6 +143,8 @@ This link expires in 15 minutes.
 
 
 
+
+# ==============================
 # AUTH ROUTES
 # ==============================
 
@@ -191,7 +199,6 @@ async def login_user(
 @app.post("/api/logout")
 async def logout():
     return {"message": "Logged out successfully"}
-
 
 
 @app.post("/api/forgot-password")
@@ -249,9 +256,7 @@ async def reset_password(
 
 
 
-
-
-
+# ==============================
 # HTML ROUTES
 # ==============================
 
@@ -284,7 +289,6 @@ async def admin_dashboard(request: Request):
 async def forgot_password(request: Request):
     return templates.TemplateResponse("forgot_password.html", {"request": request})
 
-
 @app.get("/reset-password/{token}", response_class=HTMLResponse)
 async def reset_password_page(request: Request, token: str):
     return templates.TemplateResponse(
@@ -294,10 +298,9 @@ async def reset_password_page(request: Request, token: str):
 
 
 
-
+# ==============================
 # PROTECTED ANALYZE ROUTE
 # ==============================
-
 @app.post("/analyze")
 async def analyze(
     file: UploadFile = File(...),
@@ -325,4 +328,9 @@ async def analyze(
         }
 
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+
+        print("ANALYZE ERROR:", str(e))
+
+        return {
+            "result": "ERROR:\n\n" + str(e)
+        }
