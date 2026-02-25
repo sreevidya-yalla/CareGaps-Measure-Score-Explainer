@@ -1,297 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>User Dashboard - HEDIS Explainer</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard - HEDIS Explainer</title>
 
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<style>
-* {
-  box-sizing: border-box;
-}
+    <style>
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background:#f5f9ff;
-  margin:0;
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-}
+        * {
+            box-sizing: border-box;
+        }
 
-/* Container */
-.container {
-  max-width:1200px;
-  margin:0 auto;
-  padding:0 20px;
-}
+        /* BODY */
 
-/* Header */
-header {
-  background: linear-gradient(135deg,#1e3c72,#2a5298);
-  color:white;
-  padding:25px 0;
-  box-shadow:0 4px 12px rgba(0,0,0,0.1);
-}
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f9ff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-.header-content {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+        /* HEADER */
 
-.dashboard-title {
-  display:flex;
-  align-items:center;
-  gap:12px;
-}
+        header {
+            background: linear-gradient(135deg,#1e3c72,#2a5298);
+            color: white;
+            padding: 15px 0;
+            flex: 0 0 auto;
+        }
 
-.dashboard-title i {
-  font-size:1.8rem;
-}
+        .container {
+            max-width: 1300px;
+            margin: auto;
+            padding: 0 20px;
+        }
 
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.dashboard-title h1 {
-  margin:0;
-  font-size:1.5rem;
-}
+        .dashboard-title {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
 
-.dashboard-title p {
-  margin:0;
-  font-size:0.85rem;
-  opacity:0.9;
-}
+        .dashboard-title h1 {
+            margin: 0;
+            font-size: 20px;
+        }
 
-.back-to-home {
-  color:white;
-  text-decoration:none;
-  font-size:0.9rem;
-  display:flex;
-  align-items:center;
-  gap:8px;
-  opacity:0.9;
-  transition:opacity 0.3s;
-}
+        .dashboard-title p {
+            margin: 0;
+            font-size: 12px;
+            opacity: .9;
+        }
 
-.back-to-home:hover {
-  opacity:1;
-}
+        /* MAIN */
 
+        main {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
 
+        .content-wrapper {
 
+            flex: 1;
+            max-width: 1300px;
+            margin: auto;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
 
-/* Main */
-main {
-  flex:1;
-}
+        /* CARDS */
 
-.content-wrapper {
-  max-width:900px;
-  margin:40px auto;
-  padding:0 20px;
-}
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,.08);
+            display: flex;
+            flex-direction: column;
+        }
 
-.card {
-  background:white;
-  border-radius:12px;
-  padding:30px;
-  box-shadow:0 8px 25px rgba(0,0,0,0.08);
-  margin-bottom:30px;
-}
+        /* Upload Section */
 
-h2 {
-  color:#1e3c72;
-  margin-top:0;
-}
+        .uploadCard {
+            flex: 0 0 auto;
+            padding: 10px 20px;
+        }
+        .uploadRow{
+            display:flex;
+            align-items:center;
+            gap:15px;
+            margin-bottom: 8px;
+        }
+        .uploadCard h2{
+            margin-top: 8px;
+        }
+        /* Dashboard Layout */
 
-.btn {
-  padding:12px 25px;
-  background:#2a5298;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:600;
-}
-.btn:hover {
-  background:#1e3c72;
-}
+        .dashboard-row {
+            flex: 1;
+            display: flex;
+            gap: 15px;
+            overflow: hidden;
+        }
 
+        .dashboard-row .card {
+            flex: 1;
+        }
 
-textarea {
-  width:100%;
-  height:250px;
-  border-radius:8px;
-  border:2px solid #e1ecff;
-  padding:15px;
-  resize:vertical;
-  font-family:inherit;
-}
+        /* PDF Viewer */
 
-/* Footer */
-footer {
-  text-align:center;
-  padding:20px;
-  background:#1e3c72;
-  color:white;
-}
+        #pdfViewer {
+            flex: 1;
+            width: 100%;
+            border-radius: 8px;
+            border: none;
+        }
 
-/* ===== LOADER OVERLAY ===== */
-#loadingOverlay {
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:rgba(0,0,0,0.6);
-  z-index:9999;
-  justify-content:center;
-  align-items:center;
-  flex-direction:column;
-  color:white;
-  font-size:20px;
-}
+        /* Result Box */
 
-.spinner {
-  border:6px solid #f3f3f3;
-  border-top:6px solid #3498db;
-  border-radius:50%;
-  width:60px;
-  height:60px;
-  animation:spin 1s linear infinite;
-  margin-bottom:15px;
-}
+        textarea {
+            flex: 1;
+            border-radius: 8px;
+            border: 2px solid #e1ecff;
+            padding: 12px;
+            resize: none;
+            font-family: inherit;
+            overflow: auto;
+        }
 
-@keyframes spin {
-  0% { transform:rotate(0deg); }
-  100% { transform:rotate(360deg); }
-}
-</style>
+        /* Button */
+
+        .btn {
+
+            padding: 8px 18px;
+            background: #2a5298;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            width:auto;
+        }
+
+        .btn:hover {
+            background: #1e3c72;
+        }
+
+        /* Footer */
+
+        footer {
+
+            background: #1e3c72;
+            color: white;
+            text-align: center;
+            padding: 6px;
+            font-size: 13px;
+            flex: 0 0 auto;
+        }
+
+        /* Loader */
+
+        #loadingOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,.6);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            color: white;
+            font-size: 20px;
+        }
+
+        .spinner {
+            border: 6px solid #f3f3f3;
+            border-top: 6px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 
-<body>
 
-<!-- ===== LOADING POPUP ===== -->
+<body>
 <div id="loadingOverlay">
-  <div class="spinner"></div>
-  Processing Report... Please wait
+    <div class="spinner"></div>
+    Processing Report... Please wait
 </div>
 
+
 <header>
-  <div class="container">
-    <div class="header-content">
-      <div class="dashboard-title">
-        <i class="fas fa-user-md"></i>
-        <div>
-          <h1>User Dashboard</h1>
-          <p>Upload Report & View Care Gap Analysis</p>
+    <div class="container">
+        <div class="header-content">
+            <div class="dashboard-title">
+                <i class="fas fa-user-md"></i>
+                <div>
+                    <h1>User Dashboard</h1>
+                    <p>Upload Report & View Care Gap Analysis</p>
+                </div>
+            </div>
+            <button onclick="logout()"
+                    style="background:none;border:none;color:white;cursor:pointer;">
+                Logout
+            </button>
         </div>
-      </div>
-      <button onclick="logout()" style="background:none;border:none;color:white;cursor:pointer;font-size:14px;">
-        Logout</button>
     </div>
-  </div>
 </header>
 
+
 <main>
-  <div class="content-wrapper">
-
-    <div class="card">
+<div class="content-wrapper">
+    <!-- Upload -->
+    <div class="card uploadCard">
       <h2>Upload Medical Report</h2>
-      <input type="file" id="fileInput">
-      <br><br>
-      <button class="btn" onclick="analyzeFile()">Analyze Report</button>
-    </div>
-    
-    <div class="card">
-      <h2>Uploaded Report</h2>
-      <iframe id="pdfViewer" width="100%" height="250px" style="border-radius:8px;"></iframe>
-    </div>
-    
-    <div class="card">
-      <h2>Care Gap Result</h2>
-      <textarea id="result" placeholder="AI analysis will appear here..."readonly></textarea>
-    </div>
-
+      <div class="uploadRow">
+        <input type="file" id="fileInput" accept="application/pdf">
+        <button class="btn" onclick="analyzeFile()">
+          Analyze Report
+        </button>
   </div>
+</div>
+
+    <div class="dashboard-row">
+        <div class="card">
+            <h2>Uploaded Report</h2>
+            <iframe id="pdfViewer"></iframe>
+        </div>
+
+        <div class="card">
+            <h2>Care Gap Result</h2>
+            <textarea id="result"readonly placeholder="AI analysis will appear here...">
+            </textarea>
+        </div>
+    </div>
+</div>
 </main>
 
+
+
 <footer>
-  ⚠ Educational Tool Only — Not Medical Advice
+    ⚠ Educational Tool Only — Not Medical Advice
 </footer>
+
+
+
 <script>
 
-async function analyzeFile(){
-  const file = document.getElementById("fileInput").files[0];
-  if(!file){
-    alert("Please upload a file");
-    return;
-  }
+async function analyzeFile() {
+    const file =
+        document.getElementById("fileInput").files[0];
+    if (!file) {
+        alert("Please upload a file");
+        return;
+    }
+    const token =
+        localStorage.getItem("token");
 
-  const token = localStorage.getItem("token");
-
-  if(!token){
-    alert("Session expired. Please login again.");
-    window.location.href = "/login";
-    return;
-  }
-
-  const overlay = document.getElementById("loadingOverlay");
-  const resultBox = document.getElementById("result");
-  const pdfViewer = document.getElementById("pdfViewer");
-
-  overlay.style.display = "flex";
-  resultBox.value = "";
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const res = await fetch("/analyze", {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + token
-      },
-      body: formData
-    });
-
-    if(res.status === 401){
-      alert("Session expired. Please login again.");
-      localStorage.removeItem("token");
-      window.location.href = "/login";
-      return;
+    if (!token) {
+        alert("Session expired. Please login again.");
+        window.location.href = "/login";
+        return;
     }
 
-    const data = await res.json();
+    const overlay =
+        document.getElementById("loadingOverlay");
+    const resultBox =
+        document.getElementById("result");
+    const pdfViewer =
+        document.getElementById("pdfViewer");
+    overlay.style.display = "flex";
+    resultBox.value = "";
 
-    resultBox.value = data.result || "No result returned.";
 
-    if (data.file_url) {
-      pdfViewer.src = data.file_url;
+    /* Instant Preview */
+    pdfViewer.src =
+        URL.createObjectURL(file);
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+        const res = await fetch("/analyze", {
+            method: "POST",
+            headers: {
+                "Authorization": "Bearer " + token
+            },
+            body: formData
+        });
+        const data = await res.json();
+        if (!res.ok) {
+            resultBox.value =
+                "ERROR:\n\n" + JSON.stringify(data, null, 2);
+        } else {
+            resultBox.value =
+                data.result || "No result returned.";
+        }
     }
 
-    resultBox.scrollIntoView({ behavior: "smooth" });
-
-  } catch (err) {
-    console.error(err);
-    resultBox.value = "Server error. Please try again.";
-  } finally {
-    overlay.style.display = "none";
-  }
+    catch (err) {
+        console.error(err);
+        resultBox.value =
+            "Server error. Please try again.";
+    }
+    finally {
+        overlay.style.display = "none";
+    }
 }
 
+
 function logout() {
-  localStorage.removeItem("token");
-  window.location.href = "/login";
+    localStorage.removeItem("token");
+    window.location.href = "/login";
 }
 
 </script>
-
-
-
-
 </body>
 </html>
