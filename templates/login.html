@@ -216,7 +216,6 @@ Don't have an account? <a href="/signup">Sign Up</a>
 <p>CareGaps Measure Score Explainer Bot</p>
 </footer>
 
-
 <script>
 
 document.getElementById('loginForm').addEventListener('submit', async function(e){
@@ -242,11 +241,16 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
             return;
         }
 
-        //JWT
+        // Store JWT and role
         localStorage.setItem("token", data.access_token);
+        localStorage.setItem("role", data.role);
 
-        // Redirect to dashboard
-        window.location.href = "/user_dashboard";
+        // Role-based redirect
+        if (data.role === "admin") {
+            window.location.href = "/admin";
+        } else {
+            window.location.href = "/user_dashboard";
+        }
 
     } catch (error) {
         alert("Server error. Please try again.");
@@ -254,6 +258,7 @@ document.getElementById('loginForm').addEventListener('submit', async function(e
 });
 
 </script>
+
 
 </body>
 </html>
