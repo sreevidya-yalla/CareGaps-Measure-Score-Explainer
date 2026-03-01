@@ -32,7 +32,7 @@
         header {
             background: linear-gradient(135deg,#1e3c72,#2a5298);
             color: white;
-            padding: 15px 0;
+            padding: 15px 0;    
             flex: 0 0 auto;
         }
 
@@ -207,11 +207,15 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
     </style>
+
 </head>
 
 
 <body>
+
+
 <div id="loadingOverlay">
     <div class="spinner"></div>
     Processing Report... Please wait
@@ -219,6 +223,7 @@
 
 
 <header>
+
     <div class="container">
         <div class="header-content">
             <div class="dashboard-title">
@@ -237,7 +242,9 @@
 </header>
 
 
+
 <main>
+
 <div class="content-wrapper">
     <!-- Upload -->
     <div class="card uploadCard">
@@ -250,15 +257,20 @@
   </div>
 </div>
 
+    <!-- PDF + Result -->
     <div class="dashboard-row">
         <div class="card">
             <h2>Uploaded Report</h2>
             <iframe id="pdfViewer"></iframe>
         </div>
 
+
+
         <div class="card">
             <h2>Care Gap Result</h2>
-            <textarea id="result"readonly placeholder="AI analysis will appear here...">
+            <textarea id="result"
+                      readonly
+                      placeholder="AI analysis will appear here...">
             </textarea>
         </div>
     </div>
@@ -276,12 +288,15 @@
 <script>
 
 async function analyzeFile() {
+
     const file =
         document.getElementById("fileInput").files[0];
+
     if (!file) {
         alert("Please upload a file");
         return;
     }
+
     const token =
         localStorage.getItem("token");
 
@@ -290,13 +305,13 @@ async function analyzeFile() {
         window.location.href = "/login";
         return;
     }
-
     const overlay =
         document.getElementById("loadingOverlay");
     const resultBox =
         document.getElementById("result");
     const pdfViewer =
         document.getElementById("pdfViewer");
+
     overlay.style.display = "flex";
     resultBox.value = "";
 
@@ -304,10 +319,13 @@ async function analyzeFile() {
     /* Instant Preview */
     pdfViewer.src =
         URL.createObjectURL(file);
+
     const formData = new FormData();
     formData.append("file", file);
 
+
     try {
+
         const res = await fetch("/analyze", {
             method: "POST",
             headers: {
@@ -315,6 +333,7 @@ async function analyzeFile() {
             },
             body: formData
         });
+
         const data = await res.json();
         if (!res.ok) {
             resultBox.value =
@@ -342,5 +361,7 @@ function logout() {
 }
 
 </script>
+
 </body>
+
 </html>
