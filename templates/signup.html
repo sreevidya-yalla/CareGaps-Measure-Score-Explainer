@@ -488,6 +488,14 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Admin Token Field (Hidden by Default) -->
+                        <div class="form-group" id="adminTokenGroup" style="display: none;">
+                            <label for="adminToken">Admin Signup Token</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-key"></i>
+                                <input type="password" id="adminToken" class="form-control" placeholder="Enter admin token">
+                            </div>
+                        </div>
                         
                         <!-- Personal Information Form Fields -->
                         <div class="form-group">
@@ -570,173 +578,192 @@
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const signupForm = document.getElementById('signupForm');
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            const strengthMeter = document.getElementById('strengthMeter');
-            const passwordMatchMessage = document.getElementById('passwordMatchMessage');
-            const signupButton = document.querySelector('.btn-signup');
-            
-            // Password strength indicators
-            const lengthHint = document.getElementById('lengthHint');
-            const uppercaseHint = document.getElementById('uppercaseHint');
-            const lowercaseHint = document.getElementById('lowercaseHint');
-            const numberHint = document.getElementById('numberHint');
-            const specialHint = document.getElementById('specialHint');
-            
-            // Check password strength
-            function checkPasswordStrength(password) {
-                let strength = 0;
-                
-                // Check password criteria
-                const hasMinLength = password.length >= 8;
-                const hasUpperCase = /[A-Z]/.test(password);
-                const hasLowerCase = /[a-z]/.test(password);
-                const hasNumbers = /\d/.test(password);
-                const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-                
-                // Update hint indicators
-                updateHintIndicator(lengthHint, hasMinLength);
-                updateHintIndicator(uppercaseHint, hasUpperCase);
-                updateHintIndicator(lowercaseHint, hasLowerCase);
-                updateHintIndicator(numberHint, hasNumbers);
-                updateHintIndicator(specialHint, hasSpecialChar);
-                
-                // Calculate strength 
-                strength += hasMinLength ? 1 : 0;
-                strength += hasUpperCase ? 1 : 0;
-                strength += hasLowerCase ? 1 : 0;
-                strength += hasNumbers ? 1 : 0;
-                strength += hasSpecialChar ? 1 : 0;
-                
-                // Update strength meter
-                const strengthPercent = (strength / 5) * 100;
-                strengthMeter.style.width = strengthPercent + "%";
-                
-                // Update color based on strength
-                if (strength <= 2) {
-                    strengthMeter.style.backgroundColor = '#f44336'; 
-                } else if (strength <= 4) {
-                    strengthMeter.style.backgroundColor = '#FF9800'; 
-                } else {
-                    strengthMeter.style.backgroundColor = '#4CAF50'; 
-                }
-                
-                return strength;
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const signupForm = document.getElementById('signupForm');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirmPassword');
+    const strengthMeter = document.getElementById('strengthMeter');
+    const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+    const signupButton = document.querySelector('.btn-signup');
+
+    const lengthHint = document.getElementById('lengthHint');
+    const uppercaseHint = document.getElementById('uppercaseHint');
+    const lowercaseHint = document.getElementById('lowercaseHint');
+    const numberHint = document.getElementById('numberHint');
+    const specialHint = document.getElementById('specialHint');
+
+    const userTypeRadios = document.querySelectorAll('input[name="userType"]');
+    const adminTokenGroup = document.getElementById('adminTokenGroup');
+
+    // =============================
+    // SHOW / HIDE ADMIN TOKEN FIELD
+    // =============================
+    userTypeRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === "admin") {
+                adminTokenGroup.style.display = "block";
+            } else {
+                adminTokenGroup.style.display = "none";
             }
-            
-            function updateHintIndicator(element, isValid) {
-                const icon = element.querySelector('i');
-                if (isValid) {
-                    icon.className = 'fas fa-check-circle valid';
-                    element.classList.add('valid');
-                    element.classList.remove('invalid');
-                } else {
-                    icon.className = 'fas fa-times-circle invalid';
-                    element.classList.add('invalid');
-                    element.classList.remove('valid');
-                }
+        });
+    });
+
+    // =============================
+    // PASSWORD STRENGTH CHECK
+    // =============================
+    function checkPasswordStrength(password) {
+        let strength = 0;
+
+        const hasMinLength = password.length >= 8;
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+
+        updateHintIndicator(lengthHint, hasMinLength);
+        updateHintIndicator(uppercaseHint, hasUpperCase);
+        updateHintIndicator(lowercaseHint, hasLowerCase);
+        updateHintIndicator(numberHint, hasNumbers);
+        updateHintIndicator(specialHint, hasSpecialChar);
+
+        strength += hasMinLength ? 1 : 0;
+        strength += hasUpperCase ? 1 : 0;
+        strength += hasLowerCase ? 1 : 0;
+        strength += hasNumbers ? 1 : 0;
+        strength += hasSpecialChar ? 1 : 0;
+
+        const strengthPercent = (strength / 5) * 100;
+        strengthMeter.style.width = strengthPercent + "%";
+
+        if (strength <= 2) {
+            strengthMeter.style.backgroundColor = '#f44336';
+        } else if (strength <= 4) {
+            strengthMeter.style.backgroundColor = '#FF9800';
+        } else {
+            strengthMeter.style.backgroundColor = '#4CAF50';
+        }
+
+        return strength;
+    }
+
+    function updateHintIndicator(element, isValid) {
+        const icon = element.querySelector('i');
+        if (isValid) {
+            icon.className = 'fas fa-check-circle valid';
+            element.classList.add('valid');
+            element.classList.remove('invalid');
+        } else {
+            icon.className = 'fas fa-times-circle invalid';
+            element.classList.add('invalid');
+            element.classList.remove('valid');
+        }
+    }
+
+    // =============================
+    // PASSWORD MATCH CHECK
+    // =============================
+    function checkPasswordMatch() {
+        const password = passwordInput.value;
+        const confirmPassword = confirmPasswordInput.value;
+
+        if (!password || !confirmPassword) {
+            passwordMatchMessage.textContent = '';
+            return false;
+        }
+
+        if (password === confirmPassword) {
+            passwordMatchMessage.textContent = 'Passwords match ✓';
+            passwordMatchMessage.style.color = '#4CAF50';
+            return true;
+        } else {
+            passwordMatchMessage.textContent = 'Passwords do not match ✗';
+            passwordMatchMessage.style.color = '#f44336';
+            return false;
+        }
+    }
+
+    passwordInput.addEventListener('input', function () {
+        checkPasswordStrength(this.value);
+        checkPasswordMatch();
+    });
+
+    confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+    // =============================
+    // FORM SUBMISSION
+    // =============================
+    signupForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const fullName = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = passwordInput.value;
+        const userType = document.querySelector('input[name="userType"]:checked').value;
+        const adminToken = document.getElementById('adminToken')?.value || "";
+
+        if (!fullName || !email || !password) {
+            alert("Please fill all required fields.");
+            return;
+        }
+
+        const strength = checkPasswordStrength(password);
+        if (strength < 3) {
+            alert("Password is too weak.");
+            return;
+        }
+
+        if (!checkPasswordMatch()) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        if (userType === "admin" && !adminToken) {
+            alert("Admin token is required.");
+            return;
+        }
+
+        try {
+            signupButton.disabled = true;
+            signupButton.textContent = "Creating Account...";
+
+            const formData = new FormData();
+            formData.append("username", fullName);
+            formData.append("email", email);
+            formData.append("password", password);
+            formData.append("role", userType);
+
+            if (userType === "admin") {
+                formData.append("admin_token", adminToken);
             }
-            
-            // Check if passwords match
-            function checkPasswordMatch() {
-                const password = passwordInput.value;
-                const confirmPassword = confirmPasswordInput.value;
-                
-                
-                if (!password || !confirmPassword) {
-                    passwordMatchMessage.textContent = '';
-                    return false;
-                }
-                
-                if (password === confirmPassword) {
-                    passwordMatchMessage.textContent = 'Passwords match ✓';
-                    passwordMatchMessage.style.color = '#4CAF50';
-                    return true;
-                } else {
-                    passwordMatchMessage.textContent = 'Passwords do not match ✗';
-                    passwordMatchMessage.style.color = '#f44336';
-                    return false;
-                }
-            }
-            
-            // Event listeners
-            passwordInput.addEventListener('input', function() {
-                checkPasswordStrength(this.value);
-                checkPasswordMatch();
+
+            const res = await fetch("/api/signup", {
+                method: "POST",
+                body: formData
             });
-            
-            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
-            
-            // Handle form submission
-            signupForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                // Get form values
-                const fullName = document.getElementById('fullName').value;
-                const email = document.getElementById('email').value;
-                const password = passwordInput.value;
-                const userType = document.querySelector('input[name="userType"]:checked').value;
-                const organization = document.getElementById('organization').value;
-                
-                // Validate form
-                if (!fullName || !email || !password) {
-                    alert('Please fill in all required fields');
-                    return;
-                }
-                
-                // Check password strength
-                const strength = checkPasswordStrength(password);
-                if (strength < 3) {
-                    alert('Please create a stronger password with at least 8 characters including uppercase, lowercase, numbers, and special characters.');
-                    return;
-                }
-                
-                // Check password match
-                if (!checkPasswordMatch()) {
-                    alert('Passwords do not match. Please confirm your password.');
-                    return;
-                }
-                
-                try {
-                    signupButton.disabled = true;
-                    signupButton.textContent = "Creating Account...";
-        
-                    const formData = new FormData();
-                    formData.append("username", fullName);
-                    formData.append("email", email);
-                    formData.append("password", password);
-                    formData.append("role", userType);
-        
-                    const res = await fetch("/api/signup", {
-                        method: "POST",
-                        body: formData
-                    });
 
-                    const data = await res.json();
-        
-                    if (!res.ok) {
-                        signupButton.disabled = false;
-                        signupButton.textContent = "Create New Account";
-                        alert(data.detail || "Signup failed");
-                        return;
-                    }
+            const data = await res.json();
 
-                    alert("Account created successfully! Please login.");
-                    window.location.href = "/login";
-        
-                } catch (error) {
-                    signupButton.disabled = false;
-                    signupButton.textContent = "Create New Account";
-                    alert("Server error. Please try again.");
-                }
+            if (!res.ok) {
+                signupButton.disabled = false;
+                signupButton.textContent = "Create New Account";
+                alert(data.detail || "Signup failed");
+                return;
+            }
+
+            alert("Account created successfully! Please login.");
+            window.location.href = "/login";
+
+        } catch (error) {
+            signupButton.disabled = false;
+            signupButton.textContent = "Create New Account";
+            alert("Server error. Please try again.");
+        }
     });
 
 });
 </script>
-
 
 </body>
 </html>
