@@ -16,7 +16,7 @@ from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 from dotenv import load_dotenv
 
-
+# Direct Argon2 import - NO PASSLIB
 from argon2 import PasswordHasher
 from argon2.exceptions import VerifyMismatchError, InvalidHashError
 
@@ -34,8 +34,7 @@ load_dotenv()
 
 app = FastAPI()
 
-
-
+# ==============================
 # DATABASE
 # ==============================
 MONGO_URI = os.getenv("MONGO_URI")
@@ -55,7 +54,8 @@ except Exception:
 
 # PASSWORD HASHING 
 # ==============================
-
+# Argon2id handles passwords of ANY length automatically
+# No 72-byte limit like bcrypt!
 ph = PasswordHasher(
     time_cost=3,           # 3 iterations
     memory_cost=65536,     # 64 MB memory
@@ -160,8 +160,7 @@ if os.path.exists("static"):
 
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
-
-    
+# ==============================
 # EMAIL FUNCTION
 # ==============================
 def send_reset_email(to_email, reset_link):
@@ -187,8 +186,7 @@ This link expires in 15 minutes.
         print(e)
         
 
-
-
+# ==============================
 # AUTH ROUTES
 # ==============================
 @app.post("/api/signup")
@@ -244,13 +242,14 @@ async def login_user(
     password: str = Form(...)
 ):
     try:
+        # Find user
         user = users_collection.find_one({"email": email})
 
         # Verify credentials
         if not user or not verify_password(password, user["password"]):
             raise HTTPException(status_code=400, detail="Invalid email or password")
 
-
+        # Optional: Check if hash needs rehashing (for upgrading security)
         if password_needs_rehash(user["password"]):
             new_hash = hash_password(password)
             users_collection.update_one(
@@ -287,6 +286,7 @@ async def forgot_password(email: str = Form(...)):
         user = users_collection.find_one({"email": email})
 
         if not user:
+            # Return same message for security
             return {"message": "If this email exists, a reset link has been sent."}
 
         reset_token = secrets.token_urlsafe(32)
@@ -326,6 +326,7 @@ async def reset_password(
         if not user:
             raise HTTPException(status_code=400, detail="Invalid or expired token")
 
+        # Hash new password with Argon2 - handles ANY length
         hashed_password = hash_password(new_password)
 
         users_collection.update_one(
@@ -343,8 +344,7 @@ async def reset_password(
         print(f"Reset password error: {e}")
         raise HTTPException(status_code=500, detail="Password reset failed")
 
-
-
+# ==============================
 # ADMIN USER MANAGEMENT APIs
 # ==============================
 
@@ -391,8 +391,7 @@ async def get_users(
 
 
 
-
-    
+# ==============================
 # HTML ROUTES
 # ==============================
 @app.get("/", response_class=HTMLResponse)
@@ -443,8 +442,7 @@ async def debug_email(current_user: dict = Depends(get_current_admin)):
 
 
 
-
-    
+# ==============================
 # PROTECTED ANALYZE ROUTE
 # ==============================
 @app.post("/analyze")
@@ -472,13 +470,14 @@ async def analyze(
         text = extract_text_from_scanned_pdf(contents)
         
         if not text:
+            # Try regular PDF extraction as fallback
             with open(file_path, "rb") as f:
                 text = extract_text_from_pdf(f)
 
         if not text:
             raise HTTPException(status_code=400, detail="Could not extract text from PDF")
 
-        # Processing the text
+        # Process the text
         patient_data = structure_medical_data(text)
         
         if "error" in patient_data:
