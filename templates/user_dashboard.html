@@ -258,23 +258,37 @@
 </div>
 
     <!-- PDF + Result -->
+
     <div class="dashboard-row">
+
+
         <div class="card">
+
             <h2>Uploaded Report</h2>
+
             <iframe id="pdfViewer"></iframe>
+
         </div>
 
 
 
         <div class="card">
+
             <h2>Care Gap Result</h2>
+
             <textarea id="result"
                       readonly
                       placeholder="AI analysis will appear here...">
             </textarea>
+
         </div>
+
+
     </div>
+
+
 </div>
+
 </main>
 
 
@@ -305,59 +319,89 @@ async function analyzeFile() {
         window.location.href = "/login";
         return;
     }
+
     const overlay =
         document.getElementById("loadingOverlay");
+
     const resultBox =
         document.getElementById("result");
+
     const pdfViewer =
         document.getElementById("pdfViewer");
 
+
     overlay.style.display = "flex";
+
     resultBox.value = "";
 
 
     /* Instant Preview */
+
     pdfViewer.src =
         URL.createObjectURL(file);
 
+
+
     const formData = new FormData();
+
     formData.append("file", file);
 
 
     try {
 
         const res = await fetch("/analyze", {
+
             method: "POST",
+
             headers: {
                 "Authorization": "Bearer " + token
             },
+
             body: formData
+
         });
 
+
         const data = await res.json();
+
         if (!res.ok) {
+
             resultBox.value =
                 "ERROR:\n\n" + JSON.stringify(data, null, 2);
+
         } else {
+
             resultBox.value =
                 data.result || "No result returned.";
+
         }
+
     }
 
     catch (err) {
+
         console.error(err);
+
         resultBox.value =
             "Server error. Please try again.";
+
     }
+
     finally {
+
         overlay.style.display = "none";
+
     }
+
 }
 
 
 function logout() {
+
     localStorage.removeItem("token");
+
     window.location.href = "/login";
+
 }
 
 </script>
